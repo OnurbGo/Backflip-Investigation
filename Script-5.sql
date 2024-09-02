@@ -1,20 +1,20 @@
-create table Cenas(
-Id_cenas Int not null primary key,
-Id_itens Integer,
-titulo Varchar(50),
-descricao Varchar(500),
-foreign key (Id_itens) references itens(Id_itens)
-)
+CREATE TABLE itens (
+    Id_itens INT NOT NULL PRIMARY KEY,
+    Id_cenas INT,
+    Descricao VARCHAR(100),
+    Erro VARCHAR(50),
+    Interagir VARCHAR(100),
+    Carregavel BOOLEAN
+);
 
-create table itens(
-Id_itens Int not null primary key,
-Id_Cena Integer,
-Descricao Varchar (100),
-Erro Varchar(50),
-Interagir Varchar(100),
-Carregavel Boolean,
-foreign key (Id_cenas) references Cenas(Id_cenas)
-)
+CREATE TABLE Cenas (
+    Id_cenas INT NOT NULL PRIMARY KEY,
+    Id_itens INT,
+    titulo VARCHAR(50),
+    descricao VARCHAR(500),
+    FOREIGN KEY (Id_itens) REFERENCES itens(Id_itens)
+);
+
 
 create table Pessoas(
 Id_pessoas Int not null primary key,
@@ -24,11 +24,6 @@ Descricao Varchar(100),
 Erro Varchar(200)
 )
 
-create table comando(
-Id_comando Int not null primary key,
-comandouse ()
-)
-
 create table saveGame (
 Id_save Int not null primary key,
 Id_cenas Int,
@@ -36,8 +31,8 @@ foreign key (Id_cenas) references Cenas(Id_cenas)
 )
 
 create table itens_save(
-Id_itens, 
-Id_save,
+Id_itens int not null primary key, 
+Id_save int,
 foreign key (Id_itens) references itens(Id_itens),
 foreign key (Id_save) references saveGame(Id_save)
 )
@@ -62,8 +57,7 @@ select * from pessoas
 where nome like '%Don%';
 
 
-/*show tables from bancodedados1;
+show tables from trabaio ;
 drop table cenas;
 drop table itens;
 drop table pessoas;
-*/

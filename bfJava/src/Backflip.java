@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Backflip {
 
         public static void main(String[] args) {
-
             String cmd = "";
             Scanner sc = new Scanner(System.in);
             boolean loop = false;
@@ -29,7 +28,8 @@ public class Backflip {
                                            "INVENTORY:comando usado para acesar o inventario;\n"+
                                            "SAVE:comando usado salvar seu progresso;\n"+
                                            "LOAD:comando usado carregar seu progresso salvo;\n"+
-                                           "RESTART:comando usado para reiniciar o jogo;\n"
+                                           "RESTART:comando usado para reiniciar o jogo;\n"+
+                                           "SAIR:para o jogo;\n"
                         );
                         break;
                     case "CHECK":
@@ -42,6 +42,8 @@ public class Backflip {
                         /*return cmd_load();*/ break;
                     case "RESTART":
                         /*return cmd_res();*/ break;
+                    case "SAIR":
+                        loop = true ;break;
                     default:
                         System.out.println("INVALID COMMAND");
                 }
@@ -49,19 +51,6 @@ public class Backflip {
 
 
         }
-
-/*        public static Connection conectadb() throws ClassNotFoundException{
-            try {
-                Class.forName("org.qjt.mm.mysql.Driver");
-                Connection con = DriverManager.getConnection("jdbc:Mysql://localhost:3306/bancodedados1","root");
-                return con;
-            } catch (SQLException var1) {
-                JOptionPane.showMessageDialog((Component)null, "Erro de conexão com mySQL");
-                return null;
-            }
-        }
-*/
-
 
 
 }
