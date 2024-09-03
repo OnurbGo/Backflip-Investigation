@@ -12,14 +12,18 @@ public class Backflip {
             Scanner sc = new Scanner(System.in);
             boolean loop = false;
 
+
+
+
+
             while (loop != true){
                 System.out.println("Digite um comando:");
                 cmd = sc.nextLine();
                 switch (cmd){
                     case "USE":
-                        /* return cmd_use();*/ break;
+                        /* return Cmd_use();*/ break;
                     case "GET":
-                        /* return cmd_get();*/ break;
+                        /* return Cmd_get();*/ break;
                     case "HELP":
                         System.out.println("USE:comando usado para usar item;\n" +
                                            "GET:comando usado para pegar um item;\n"+
@@ -33,15 +37,15 @@ public class Backflip {
                         );
                         break;
                     case "CHECK":
-                        /*return cmd_check();*/ break;
+                        /*return Cmd_check();*/ break;
                     case "INVENTORY":
-                        /*return cmd_inv();*/ break;
+                        /*return Cmd_inv();*/ break;
                     case "SAVE":
-                        /*return cmd_save();*/ break;
+                        /*return Cmd_save();*/ break;
                     case "LOAD":
-                        /*return cmd_load();*/ break;
+                        /*return Cmd_load();*/ break;
                     case "RESTART":
-                        /*return cmd_res();*/ break;
+                        /*return Cmd_res();*/ break;
                     case "SAIR":
                         loop = true ;break;
                     default:
