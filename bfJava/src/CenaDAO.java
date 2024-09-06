@@ -3,25 +3,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ItemDAO {
-
-    public Item getItemByName(String nome) {
-        String sql = "SELECT * FROM itens WHERE nome = ?";
+public class CenaDAO {
+    public Cena getCenaById(int cenaId) {
+        String sql = "SELECT * FROM cenas WHERE Id_cenas = ?";
         try (Connection conn = DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, nome);
+            stmt.setInt(1, cenaId);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Item(
-                            rs.getInt("id"),
-                            rs.getString("nome"),
-                            rs.getString("descricao"),
-                            rs.getBoolean("carregavel")
+                    return new Cena(
+                            rs.getInt("Id_cenas"),
+                            rs.getString("titulo"),
+                            rs.getString("descricao")
                     );
                 } else {
-                    System.out.println("Item não encontrado.");
+                    System.out.println("Cena não encontrada.");
                 }
             }
         } catch (SQLException e) {
