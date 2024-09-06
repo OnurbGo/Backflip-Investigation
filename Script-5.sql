@@ -7,12 +7,14 @@ CREATE TABLE Cenas (
 CREATE TABLE itens (
     Id_itens INT NOT NULL PRIMARY KEY,
     Id_cenas INT,
+    Id_Pessoas INT,
     Nome Varchar (100),
     Descricao VARCHAR(255),
     Erro VARCHAR(500),
     Interagir VARCHAR(100),
     Carregavel BOOLEAN,
-    FOREIGN KEY (Id_cenas) REFERENCES Cenas(Id_cenas)
+    FOREIGN KEY (Id_cenas) REFERENCES Cenas(Id_cenas),
+    foreign key (Id_pessoas) references Pessoas(Id_pessoas)
 );
 
 
@@ -48,16 +50,16 @@ INSERT INTO cenas (Id_cenas, titulo, descricao) VALUES
 (1,'O Armeiro', 'Ao entrar no estabelecimento, você se encontra com o dito cujo Armeiro conhecido também por Philip Gunsman'),
 (2,'Delegacia', 'Estando na delegacia, chegou a hora da verdade. Quem é o verdadeiro culpado? você pode conversar com Willian, a esposa de Backflip, e Grassfield');
 
-INSERT INTO itens (Id_itens, Id_Cenas, Nome, Descricao, Erro, Interagir, Carregavel) VALUES
-(0, 0,'MUNICAO DESCONHECIDO' , 'Capsula de munição desconhecida', 'Parece que isso não pode ser usado assim', 'USE Capsula de munição desconhecida', 1),
-(1, 0,'PEGADAS DE LAMA' , 'Essas pegadas batem com os sapatos do john ou seja ele só entrou em casa com os sapatos sujos, bem que estava chovendo ontem.', 'Creio que não esteja olhando da maneira certa', 'USE Pegada em Corpo Do Jhon', 0),
-(2, 0,'COMODA MOVIDA' , 'Ela diz que cuida da limpeza da casa e que tinha retirado o móvel do lugar para limpar, porém esqueceu de colocar no lugar de volta.', 'Acredito que isso não funciona dessa forma', 'USE Comoda em Fachineira Joana Samambaia', 0),
-(3, 0,'CORPO JOHN' , 'Tem um buraco de bala no colete mas não tem buraco de saída no terno, ou seja o john tirou o terno antes de ser baleado, provavelmente era alguém próximo pois ele se sentiu à vontade para tirar o terno.', 'Interessante, mas não acho que seja desse jeito', 'USE corpo de John', 1),
-(4, 0,'PISTA VISITA' , 'Ele escutou a chegada de alguma visita tarde da noite ao John, apesar de não ter visto quem era. Ele também diz que se houve disparo ele não ouviu nada apesar de morar ao lado, possivelmente houve o uso de um silenciador.', 'Creio que não seja de modo que deve ser feito', 'USE James Fubacake', 1),
-(5, 0,'PISTA ARMA DO CRIMA' , 'fale com o armeiro Philip Gunsman sobre isso, enquanto ele leva todo o pessoal para um interrogatorio na delegacia.', 'Não é sobre isso que o xerife deveria saber', 'USE pista arma do crime em xerife', 1),
-(6, 1,'PISTA SUSPEITOS' , '', 'No fim das contas, esse não é quem queriamos', 'USE pista suspeitos', 1),
-(7, 1,'MUNICAO 9MM' , 'Atualmente, uma pista crucial perante a cena do crime', 'Não parece que é pra ser usado dessa maneira', 'USE municao 9mm no Armeiro', 1)
-(8, 2,'ACUSAR' , 'Willian frontflip fica indignado com tamanha acusação', 'você sente que está perto, mas falta algo', 'USE acusar Willian Frontflip', 0);
+INSERT INTO itens (Id_itens, Id_Cenas, Id_Pessoas , Nome, Descricao, Erro, Interagir, Carregavel) VALUES
+(0, 0, 0,'MUNICAO DESCONHECIDO' , 'Capsula de munição desconhecida', 'Parece que isso não pode ser usado assim', 'USE Capsula de munição desconhecida', 1),
+(1, 0, 0,'PEGADAS DE LAMA' , 'Essas pegadas batem com os sapatos do john ou seja ele só entrou em casa com os sapatos sujos, bem que estava chovendo ontem.', 'Creio que não esteja olhando da maneira certa', 'USE Pegada em Corpo Do Jhon', 0),
+(2, 0, 2,'COMODA MOVIDA' , 'Ela diz que cuida da limpeza da casa e que tinha retirado o móvel do lugar para limpar, porém esqueceu de colocar no lugar de volta.', 'Acredito que isso não funciona dessa forma', 'USE Comoda em Fachineira Joana Samambaia', 0),
+(3, 0, 0,'CORPO JOHN' , 'Tem um buraco de bala no colete mas não tem buraco de saída no terno, ou seja o john tirou o terno antes de ser baleado, provavelmente era alguém próximo pois ele se sentiu à vontade para tirar o terno.', 'Interessante, mas não acho que seja desse jeito', 'USE corpo de John', 1),
+(4, 0, 3,'PISTA VISITA' , 'Ele escutou a chegada de alguma visita tarde da noite ao John, apesar de não ter visto quem era. Ele também diz que se houve disparo ele não ouviu nada apesar de morar ao lado, possivelmente houve o uso de um silenciador.', 'Creio que não seja de modo que deve ser feito', 'USE James Fubacake', 1),
+(5, 0, 7,'PISTA ARMA DO CRIMA' , 'fale com o armeiro Philip Gunsman sobre isso, enquanto ele leva todo o pessoal para um interrogatorio na delegacia.', 'Não é sobre isso que o xerife deveria saber', 'USE pista arma do crime em xerife', 1),
+(6, 1, 0,'PISTA SUSPEITOS' , 'Você tem 3 suspeitos', 'No fim das contas, esse não é quem queriamos', 'USE pista suspeitos', 1),
+(7, 1, 5,'MUNICAO 9MM' , 'Atualmente, uma pista crucial perante a cena do crime', 'Não parece que é pra ser usado dessa maneira', 'USE municao 9mm no Armeiro', 1),
+(8, 2, 1,'ACUSAR' , 'Willian frontflip fica indignado com tamanha acusação', 'você sente que está perto, mas falta algo', 'USE acusar Willian Frontflip', 0);
 
 INSERT INTO pessoas (Id_pessoas, nome, Comando, Descricao, Erro) VALUES
 (0, 'Detetive Don Bigodon', 'USE Capsula de munição desconhecida', 'Então Parece que essa capsula é de uma arma do calibre 9mm', 'Ele não quer ser importunado por coisas sem relevancias'),
@@ -75,6 +77,7 @@ select * from cenas;
 select * from itens;
 select * from pessoas; 
 select * from usuarios; 
+
 
 drop database sqltextadventure
 create database sqltextadventure
