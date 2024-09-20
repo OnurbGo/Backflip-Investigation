@@ -1,5 +1,7 @@
+package model;
+
 public class Cena {
-    private int id;
+    private Integer id;
     private String titulo;
     private String descricao;
 

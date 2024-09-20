@@ -1,3 +1,6 @@
+import model.Cena;
+import repository.CenaDAO;
+
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -6,8 +9,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         CenaDAO cenaDAO = new CenaDAO();
         Player player = null;
-
-        System.out.println("Bem-vindo ao jogo!");
 
         // Fluxo de registro ou login
         while (player == null) {
@@ -46,7 +47,7 @@ public class Main {
             }
         }
 
-        // Exibe a cena atual após o login bem-sucedido
+
         Cena cena = cenaDAO.getCenaById(player.getCurrentSceneId());
         if (cena != null) {
             System.out.println("Descrição da cena: " + cena.getDescricao());
@@ -54,18 +55,36 @@ public class Main {
             System.out.println("Cena não encontrada.");
         }
 
-        // Inicializa o executor de comandos
-        CommandExecutor commandExecutor = new CommandExecutor(player);
+        // executor dos comandos
+        GameSave gameSave = new GameSave();
+        CommandExecutor commandExecutor = new CommandExecutor(player, gameSave);
 
-        // Loop principal de comandos do jogo
+        //Loop Principal
         while (true) {
             System.out.println("Digite um comando:");
             String input = scanner.nextLine();
-            String[] parts = input.split(" ", 2);
-            String command = parts[0].toUpperCase();
-            String arguments = (parts.length > 1) ? parts[1] : "";
 
-            commandExecutor.executeCommand(command, arguments);
+            // Remove espaços em branco e divide a entrada em partes
+            String[] parts = input.trim().split(" +");
+
+            if (parts.length == 1) {
+                // Comando Único
+                String comando1 = parts[0].toUpperCase();
+                commandExecutor.executeCommand(comando1, "", "", "");
+            } else if (parts.length == 2) {
+                // Comando com um item
+                String comando1 = parts[0].toUpperCase();
+                String argumento1 = parts[1];
+                commandExecutor.executeCommand(comando1, "", argumento1, "");
+            } else if (parts.length == 4 && parts[2].equalsIgnoreCase("WITH")) {
+                // Comando com dois itens
+                String comando1 = parts[0].toUpperCase();
+                String item1 = parts[1];
+                String item2 = parts[3];
+                commandExecutor.executeCommand(comando1, "", item1, item2);
+            } else {
+                System.out.println("Comando inválido.");
+            }
         }
     }
 }

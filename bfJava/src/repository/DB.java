@@ -1,9 +1,11 @@
+package repository;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DB {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/textadventure";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/sqltextadventure";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
