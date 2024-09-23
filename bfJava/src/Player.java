@@ -26,13 +26,12 @@ public class Player {
             return;
         }
 
-        try (Connection conn = DB.conectar()) {
-            String insertItemSql = "INSERT INTO inventory (usuario_id, item_id) VALUES (?, ?)";
+        try (Connection conn = repository.DB.conectar()) {
+            String insertItemSql = "INSERT INTO inventory (Id_player, Id_itens) VALUES (?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(insertItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());
                 stmt.executeUpdate();
-                System.out.println("Item " + item.getNome() + " adicionado ao inventário.");
             }
         } catch (SQLException e) {
             System.err.println("Erro ao adicionar item ao inventário: " + e.getMessage());
@@ -41,7 +40,7 @@ public class Player {
 
     // Limpa o inventário
     public void clearInventory() {
-        try (Connection conn = DB.conectar()) {
+        try (Connection conn = repository.DB.conectar()) {
             String deleteInventorySql = "DELETE FROM inventory WHERE Id_player = ?";
             try (PreparedStatement stmt = conn.prepareStatement(deleteInventorySql)) {
                 stmt.setInt(1, this.id); // Certifique-se de que this.id é o Id_player correto
@@ -55,10 +54,9 @@ public class Player {
     // Obtém o inventário do jogador
     public List<Item> getInventory() {
         List<Item> items = new ArrayList<>();
-        try (Connection conn = DB.conectar()) {
-            String selectItemsSql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.item_id = i.Id_itens WHERE inv.usuario_id = ?";
+        try (Connection conn = repository.DB.conectar()) {
+            String selectItemsSql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_itens = i.Id_itens WHERE inv.Id_player = ?";
             try (PreparedStatement stmt = conn.prepareStatement(selectItemsSql)) {
-                System.out.println("O id do player é: " + this.id);
                 stmt.setInt(1, this.id);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
@@ -77,8 +75,8 @@ public class Player {
 
     // Remove um item do inventário
     public void removeItemFromInventory(Item item) {
-        try (Connection conn = DB.conectar()) {
-            String deleteItemSql = "DELETE FROM inventory WHERE usuario_id = ? AND item_id = ?";
+        try (Connection conn = repository.DB.conectar()) {
+            String deleteItemSql = "DELETE FROM inventory WHERE Id_player = ? AND Id_itens = ?";
             try (PreparedStatement stmt = conn.prepareStatement(deleteItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());
@@ -95,8 +93,8 @@ public class Player {
     }
 
     private boolean isItemInInventory(Item item) {
-        try (Connection conn = DB.conectar()) {
-            String checkItemSql = "SELECT * FROM inventory WHERE usuario_id = ? AND item_id = ?";
+        try (Connection conn = repository.DB.conectar()) {
+            String checkItemSql = "SELECT * FROM inventory WHERE Id_player = ? AND Id_itens = ?";
             try (PreparedStatement stmt = conn.prepareStatement(checkItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());

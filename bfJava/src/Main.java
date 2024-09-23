@@ -4,7 +4,7 @@ import repository.CenaDAO;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Main {
+public class    Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         CenaDAO cenaDAO = new CenaDAO();
@@ -75,7 +75,7 @@ public class Main {
                 // Comando com um item
                 String comando1 = parts[0].toUpperCase();
                 String argumento1 = parts[1];
-                commandExecutor.executeCommand(comando1, "", argumento1, "");
+                commandExecutor.executeCommand(comando1, "", argumento1, argumento1); // Passa argumento1 como arguments
             } else if (parts.length == 4 && parts[2].equalsIgnoreCase("WITH")) {
                 // Comando com dois itens
                 String comando1 = parts[0].toUpperCase();
@@ -86,5 +86,6 @@ public class Main {
                 System.out.println("Comando inválido.");
             }
         }
+
     }
 }

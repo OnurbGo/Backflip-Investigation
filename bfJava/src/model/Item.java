@@ -1,32 +1,38 @@
 package model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class Item {
     private int id;
     private String nome;
     private String descricao;
     private boolean carregavel;
     private Item combinedItem;
+    private int id_cena; // Adicionando o id_cena
 
-    // Construtor com todos os parâmetros
-    public Item(int id, String nome, String descricao, boolean carregavel, Item combinedItem) {
+    // Construtor com todos os parâmetros, incluindo id_cena
+    public Item(int id, String nome, String descricao, boolean carregavel, Item combinedItem, int id_cena) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.carregavel = carregavel;
         this.combinedItem = combinedItem;
+        this.id_cena = id_cena; // Inicializando o id_cena
     }
 
-    // Construtor que não precisa do combinedItem
+    // Construtor sem combinedItem, mas com id_cena
+    public Item(int id, String nome, String descricao, boolean carregavel, int id_cena) {
+        this(id, nome, descricao, carregavel, null, id_cena);
+    }
+
+    // Construtor que não precisa do combinedItem nem do id_cena
     public Item(int id, String nome, String descricao, boolean carregavel) {
-        this(id, nome, descricao, carregavel, null);
+        this(id, nome, descricao, carregavel, null, 1); // Define um valor padrão para id_cena quando não for usado
     }
 
     // Getters e Setters
+    public int getId_cena() {
+        return id_cena; // Getter para id_cena
+    }
+
     public int getId() {
         return id;
     }
@@ -67,7 +73,15 @@ public class Item {
         this.combinedItem = combinedItem;
     }
 
-    // Metodo para combinar itens
+    public int getIdCena() { // Getter para id_cena
+        return id_cena;
+    }
+
+    public void setIdCena(int id_cena) { // Setter para id_cena
+        this.id_cena = id_cena;
+    }
+
+    // Método para combinar itens
     public boolean canCombineWith(Item otherItem) {
         // Se você tiver lógica específica para combinação, adicione aqui
         return combinedItem != null && combinedItem.equals(otherItem);

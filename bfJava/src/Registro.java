@@ -10,7 +10,7 @@ public class Registro {
     public static void registrar(String login, String senha) throws SQLException {
         String consultarLogins = "SELECT * FROM usuarios WHERE login = ?";
 
-        try (Connection conn = DB.conectar();
+        try (Connection conn = repository.DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(consultarLogins)) {
 
             stmt.setString(1, login);

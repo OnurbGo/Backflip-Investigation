@@ -21,53 +21,85 @@ public class CommandExecutor {
         this.player = player;
         this.gameSave = gameSave;
     }
-        public void executeCommand(String comando1, String comando2, String item2, String arguments) {
+        public void executeCommand(String comando1, String argumento1, String argumento2, String arguments) {
         try (Connection conn = repository.DB.conectar()) {
             List<Item> inventory = null;
 
-            System.out.println("Comando: " + comando1 + ", Argumentos: " + arguments);
             switch (comando1) {
                 case "USE":
-                    //usar item
                     System.out.println("Usando item: " + arguments);
+
+                    // Verifica se o argumento é "MUNICAO_DESCONHECIDO"
+                    if (arguments.equalsIgnoreCase("MUNICAO_DESCONHECIDO")) {
+                        inventory = player.getInventory();
+                        boolean hasItem = false;
+
+                        // Verifica se o jogador tem o item "MUNICAO_DESCONHECIDO"
+                        for (Item item : inventory) {
+                            if (item.getNome().equalsIgnoreCase("MUNICAO_DESCONHECIDO")) {
+                                hasItem = true;
+                                break;
+                            }
+                        }
+
+                        if (hasItem) {
+                            // Mudar a cena do jogador
+                            player.setCurrentSceneId(player.getCurrentSceneId() + 1); // Ou defina o ID da nova cena diretamente
+                            Cena novaCena = cenaDAO.getCenaById(player.getCurrentSceneId());
+                            if (novaCena != null) {
+                                System.out.println("Você avançou para a nova cena: " + novaCena.getDescricao());
+                            } else {
+                                System.out.println("Cena não encontrada.");
+                            }
+                        } else {
+                            System.out.println("Você não tem o item MUNICAO_DESCONHECIDO no inventário. Não é possível avançar.");
+                        }
+                    } else {
+                        System.out.println("O item " + arguments + " não pode ser usado para avançar.");
+                    }
                     break;
                 case "GET":
                     System.out.println("Procurando item: " + arguments.trim());
                     Item item = itemDAO.getItemByName(arguments.trim());
 
                     if (item != null) {
-                        if (item.isCarregavel()) {
-                            inventory = player.getInventory();
-                            boolean itemExists = false;
+                        // Verifica se o item pertence à cena atual do jogador
+                        int currentSceneId = player.getCurrentSceneId();
+                        if (item.getId_cena() == currentSceneId) { // Supondo que o item tenha um método getSceneId()
 
-                            for (Item i : inventory) {
-                                if (i.getNome().equalsIgnoreCase(item.getNome())) {
-                                    itemExists = true;
-                                    break;
+                            if (item.isCarregavel()) {
+                                inventory = player.getInventory();
+                                boolean itemExists = false;
+
+                                for (Item i : inventory) {
+                                    if (i.getNome().equalsIgnoreCase(item.getNome())) {
+                                        itemExists = true;
+                                        break;
+                                    }
                                 }
+
+                                if (!itemExists) {
+                                    player.addItemToInventory(item);
+                                    System.out.println("Item " + item.getNome() + " adicionado ao inventário.");
+                                } else {
+                                    System.out.println("Item " + item.getNome() + " já está no inventário.");
+                                }
+                            } else {
+                                System.out.println("Item " + item.getNome() + " não é carregável.");
                             }
 
-                            if (!itemExists) {
-                                player.addItemToInventory(item);
-                                System.out.println("Item " + item.getNome() + " adicionado ao inventário.");
-                            } else {
-                                System.out.println("Item " + item.getNome() + " já está no inventário.");
-                            }
                         } else {
-                            System.out.println("Item " + item.getNome() + " não é carregável.");
+                            System.out.println("Você não pode pegar itens de outra cena.");
                         }
                     } else {
                         System.out.println("Item com o nome '" + arguments.trim() + "' não encontrado.");
                     }
                     break;
-                    case "HELP":
-                    // Exibe a lista de comandos
-                    System.out.println("Lista de comandos: USE item WITH item, GET, HELP, CHECK, INVENTORY, RESTART, SAIR");
-                    break;
+
                 case "INVENTORY":
                     // Acessar o inventário
                     System.out.println("Inventário:");
-                    inventory = getInventoryForPlayer(player.getId()); // Agora a variável já está declarada
+                    inventory = getInventoryForPlayer(player.getId());
                     if (inventory.isEmpty()) {
                         System.out.println("O inventário está vazio.");
                     } else {
@@ -76,6 +108,9 @@ public class CommandExecutor {
                         }
                     }
                     break;
+                    case "HELP":
+                        System.out.println("RESTART-Resetar Jogo,GET-Pegar Item,USE-Usar item,SAIR-Sair Do Jogo,INVENTORY-Mostrar Inventario,HELP-Mostrar Comandos");
+                        break;
                     case "RESTART":
                     // reiniciar o jogo
                     resetGame(conn);
@@ -121,7 +156,7 @@ public class CommandExecutor {
 
     public List<Item> getInventoryForPlayer(int playerId) {
         List<Item> inventory = new ArrayList<>();
-        String sql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = ?";
+        String sql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_itens = i.Id_itens WHERE inv.Id_player = ?";
 
         try (Connection conn = DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

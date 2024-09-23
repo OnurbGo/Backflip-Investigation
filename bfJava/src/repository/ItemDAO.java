@@ -7,9 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ItemDAO {
+
     public Item getItemByName(String nome) {
-        String sql = "SELECT * FROM items WHERE Nome = ?";
-        try (Connection conn = DB.conectar();
+        Item item = null;
+        String sql = "SELECT Id_itens, Nome, Descricao, Carregavel, combined_item_id, id_cenas FROM items WHERE Nome = ?";
+
+        try (Connection conn = repository.DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome);
@@ -19,6 +22,7 @@ public class ItemDAO {
                     String descricao = rs.getString("Descricao");
                     boolean carregavel = rs.getBoolean("Carregavel");
                     int combinedItemId = rs.getInt("combined_item_id");
+                    int idCena = rs.getInt("id_cenas");
 
                     // Lógica para obter o item combinado, se aplicável
                     Item combinedItem = null;
@@ -26,38 +30,34 @@ public class ItemDAO {
                         combinedItem = getItemById(combinedItemId);
                     }
 
-                    return new Item(id, nome, descricao, carregavel, combinedItem);
-                } else {
-                    System.out.println("Item com o nome '" + nome + "' não encontrado.");
+                    item = new Item(id, nome, descricao, carregavel, combinedItem, idCena);
                 }
             }
         } catch (SQLException e) {
             System.err.println("Erro ao acessar o banco de dados: " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return item;
     }
 
-    private Item getItemById(int id) {
+    public Item getItemById(int id) { // Alterado para int
+        Item item = null;
         String sql = "SELECT * FROM items WHERE Id_itens = ?";
+
         try (Connection conn = DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-
+            stmt.setInt(1, id); // Usando int para o ID
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String nome = rs.getString("Nome");
                     String descricao = rs.getString("Descricao");
                     boolean carregavel = rs.getBoolean("Carregavel");
-
-                    return new Item(id, nome, descricao, carregavel, null);
+                    item = new Item(id, nome, descricao, carregavel); // Usando o ID corretamente
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao acessar o banco de dados: " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return item;
     }
 }
