@@ -49,7 +49,6 @@ public class CommandExecutor {
                         // Cena 3 - Usar "ACUSAR"
                         if (itemToRemove.getNome().equalsIgnoreCase("ACUSAR") && player.getCurrentSceneId() == 3) {
                             System.out.println("Parabéns, você capturou o criminoso!");
-                            // Aqui você pode adicionar lógica adicional, como finalizar o jogo ou passar para outra fase.
 
                             // Cena 1 - Usar "MUNICAO_DESCONHECIDO"
                         } else if (itemToRemove.getNome().equalsIgnoreCase("MUNICAO_DESCONHECIDO") && player.getCurrentSceneId() == 1) {
@@ -100,7 +99,7 @@ public class CommandExecutor {
                             }
 
                         } else {
-                            // Se o item não fizer parte dos itens principais, remover do inventário
+                            // Se o item não fizer parte dos itens principais, remove do inventário
                             System.out.println("Esse item não faz parte dos principais, será removido.");
                             player.removeItemFromInventory(itemToRemove);
                         }
