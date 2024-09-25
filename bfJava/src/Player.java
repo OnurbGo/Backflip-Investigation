@@ -27,7 +27,7 @@ public class Player {
         }
 
         try (Connection conn = repository.DB.conectar()) {
-            String insertItemSql = "INSERT INTO inventory (Id_player, Id_itens) VALUES (?, ?)";
+            String insertItemSql = "INSERT INTO inventory (Id_player, Id_item) VALUES (?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(insertItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());
@@ -55,7 +55,7 @@ public class Player {
     public List<Item> getInventory() {
         List<Item> items = new ArrayList<>();
         try (Connection conn = repository.DB.conectar()) {
-            String selectItemsSql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_itens = i.Id_itens WHERE inv.Id_player = ?";
+            String selectItemsSql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = ?";
             try (PreparedStatement stmt = conn.prepareStatement(selectItemsSql)) {
                 stmt.setInt(1, this.id);
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -76,7 +76,7 @@ public class Player {
     // Remove um item do inventário
     public void removeItemFromInventory(Item item) {
         try (Connection conn = repository.DB.conectar()) {
-            String deleteItemSql = "DELETE FROM inventory WHERE Id_player = ? AND Id_itens = ?";
+            String deleteItemSql = "DELETE FROM inventory WHERE Id_player = ? AND Id_item = ?";
             try (PreparedStatement stmt = conn.prepareStatement(deleteItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());
@@ -94,7 +94,7 @@ public class Player {
 
     private boolean isItemInInventory(Item item) {
         try (Connection conn = repository.DB.conectar()) {
-            String checkItemSql = "SELECT * FROM inventory WHERE Id_player = ? AND Id_itens = ?";
+            String checkItemSql = "SELECT * FROM inventory WHERE Id_player = ? AND Id_item = ?";
             try (PreparedStatement stmt = conn.prepareStatement(checkItemSql)) {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, item.getId());

@@ -29,33 +29,82 @@ public class CommandExecutor {
                 case "USE":
                     System.out.println("Usando item: " + arguments);
 
-                    // Verifica se o argumento é "MUNICAO_DESCONHECIDO"
-                    if (arguments.equalsIgnoreCase("MUNICAO_DESCONHECIDO")) {
-                        inventory = player.getInventory();
-                        boolean hasItem = false;
+                    // Divide o comando para checar "use [item] with [alvo]" (se necessário)
+                    String[] parts = arguments.split(" with ");
+                    String itemUsado = parts[0].trim();
+                    inventory = player.getInventory();
+                    Item itemToRemove = null;
+                    boolean hasItem = false;
 
-                        // Verifica se o jogador tem o item "MUNICAO_DESCONHECIDO"
-                        for (Item item : inventory) {
-                            if (item.getNome().equalsIgnoreCase("MUNICAO_DESCONHECIDO")) {
-                                hasItem = true;
-                                break;
-                            }
+                    // Verifica se o jogador tem o item no inventário
+                    for (Item item : inventory) {
+                        if (item.getNome().equalsIgnoreCase(itemUsado)) {
+                            hasItem = true;
+                            itemToRemove = item;
+                            break;
                         }
+                    }
 
-                        if (hasItem) {
-                            // Mudar a cena do jogador
-                            player.setCurrentSceneId(player.getCurrentSceneId() + 1); // Ou defina o ID da nova cena diretamente
-                            Cena novaCena = cenaDAO.getCenaById(player.getCurrentSceneId());
-                            if (novaCena != null) {
-                                System.out.println("Você avançou para a nova cena: " + novaCena.getDescricao());
+                    if (hasItem) {
+                        // Caso 1: Cena 3 - Usar "ACUSAR" sem alvo
+                        if (itemToRemove.getNome().equalsIgnoreCase("ACUSAR") && player.getCurrentSceneId() == 3) {
+                            System.out.println("Parabéns, você capturou o criminoso!");
+                            // Aqui você pode adicionar lógica adicional, como finalizar o jogo ou passar para outra fase.
+
+                            // Caso 2: Cena 1 - Usar "MUNICAO_DESCONHECIDO"
+                        } else if (itemToRemove.getNome().equalsIgnoreCase("MUNICAO_DESCONHECIDO") && player.getCurrentSceneId() == 1) {
+                            // Remove "MUNICAO_DESCONHECIDO" e adiciona "MUNICAO_9MM"
+                            player.removeItemFromInventory(itemToRemove);
+                            System.out.println("Item MUNICAO_DESCONHECIDO removido do inventário.");
+
+                            Item municao9mm = itemDAO.getItemByName("MUNICAO_9MM");
+                            if (municao9mm != null) {
+                                player.addItemToInventory(municao9mm);
+                                System.out.println("Item MUNICAO_9MM adicionado ao inventário.");
                             } else {
-                                System.out.println("Cena não encontrada.");
+                                System.out.println("Item MUNICAO_9MM não encontrado no banco de dados.");
                             }
+
+                            // Avança para a Cena 2
+                            player.setCurrentSceneId(2);
+                            GameSave.saveGame(player); // Salva o progresso após mudar a cena
+                            Cena cenaAtual = cenaDAO.getCenaById(2); // Obtém a nova cena do banco de dados
+                            if (cenaAtual != null) {
+                                System.out.println("Você avançou para a Cena 2: " + cenaAtual.getDescricao());
+                            } else {
+                                System.out.println("Cena 2 não encontrada.");
+                            }
+
+                            // Caso 3: Cena 2 - Usar "MUNICAO_9MM"
+                        } else if (itemToRemove.getNome().equalsIgnoreCase("MUNICAO_9MM") && player.getCurrentSceneId() == 2) {
+                            // Remove "MUNICAO_9MM" e adiciona "ACUSAR"
+                            player.removeItemFromInventory(itemToRemove);
+                            System.out.println("Item MUNICAO_9MM removido do inventário.");
+
+                            Item acusar = itemDAO.getItemByName("ACUSAR");
+                            if (acusar != null) {
+                                player.addItemToInventory(acusar);
+                                System.out.println("Item ACUSAR adicionado ao inventário.");
+                            } else {
+                                System.out.println("Item ACUSAR não encontrado no banco de dados.");
+                            }
+
+                            // Avança para a Cena 3
+                            player.setCurrentSceneId(3);
+                            GameSave.saveGame(player); // Salva o progresso após mudar a cena
+                            Cena cenaAtual = cenaDAO.getCenaById(3); // Obtém a nova cena do banco de dados
+                            if (cenaAtual != null) {
+                                System.out.println("Você avançou para a Cena 3: " + cenaAtual.getDescricao());
+                            } else {
+                                System.out.println("Cena 3 não encontrada.");
+                            }
+
                         } else {
-                            System.out.println("Você não tem o item MUNICAO_DESCONHECIDO no inventário. Não é possível avançar.");
+                            // Se o item não for encontrado ou a ação não puder ser realizada
+                            System.out.println("Esse item não pode ser usado nesta cena.");
                         }
                     } else {
-                        System.out.println("O item " + arguments + " não pode ser usado para avançar.");
+                        System.out.println("Item " + itemUsado + " não encontrado no inventário.");
                     }
                     break;
                 case "GET":
@@ -156,9 +205,9 @@ public class CommandExecutor {
 
     public List<Item> getInventoryForPlayer(int playerId) {
         List<Item> inventory = new ArrayList<>();
-        String sql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_itens = i.Id_itens WHERE inv.Id_player = ?";
+        String sql = "SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = ?";
 
-        try (Connection conn = DB.conectar();
+        try (Connection conn = repository.DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, playerId);

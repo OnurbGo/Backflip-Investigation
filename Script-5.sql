@@ -74,8 +74,7 @@ INSERT INTO items (Id_itens, Id_Cenas, combined_item_id, Nome, Descricao, Result
 SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = 1;
 
 insert into inventory (inventory_id, Id_player, Id_item) values
-(1,1,1),
-(2,1,2);
+(2,1,9);
 
 update usuarios
 set cena_id = 2
@@ -88,11 +87,13 @@ select * from items;
 select * from usuarios; 
 select * from inventory;
 
+
 drop database sqltextadventure
 create database sqltextadventure
 use sqltextadventure
 
-SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = 1
+SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = 1;
+
 
 drop table cenas;
 drop table items;

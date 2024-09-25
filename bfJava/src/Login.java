@@ -9,7 +9,7 @@ public class Login {
     public static Player realizarLogin(String login, String senha) {
         String sql = "SELECT * FROM usuarios WHERE login = ? AND senha = ?";
 
-        try (Connection conn = DB.conectar();
+        try (Connection conn = repository.DB.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, login);
