@@ -16,16 +16,6 @@ CREATE TABLE items (
     FOREIGN KEY (combined_item_id) REFERENCES items(id_itens)
 );
 
-
-CREATE TABLE Login (
-    Id_save INT NOT NULL PRIMARY KEY,
-    Id_cenas INT,
-    Id_itens INT,
-    FOREIGN KEY (Id_itens) REFERENCES items(Id_itens),
-    FOREIGN KEY (Id_cenas) REFERENCES Cenas(Id_cenas)
-);
-
-
 CREATE TABLE usuarios (
     Id_player INT AUTO_INCREMENT PRIMARY KEY,
     login VARCHAR(255) UNIQUE NOT NULL,
@@ -47,9 +37,6 @@ INSERT INTO cenas (Id_cenas, titulo, descricao) VALUES
 (2,'O Armeiro', 'Ao entrar no estabelecimento, você se encontra com o dito cujo Armeiro conhecido também por Philip Gunsman'),
 (3,'Delegacia', 'Estando na delegacia, chegou a hora da verdade. Quem é o verdadeiro culpado? você pode conversar com Willian, a esposa de Backflip, e Grassfield');
 
-/*
-*/
-
 INSERT INTO items (Id_itens, Id_Cenas, combined_item_id, Nome, Descricao, Resultado, Carregavel) VALUES
 (1, 1, NULL, 'MUNICAO_DESCONHECIDO', 'Uma cápsula de munição não reconhecível', 'Você descobre que essa cápsula é do calibre 9mm', 1),
 (2, 1, NULL, 'PEGADAS_DE_LAMA', 'Tem um rastro de pegadas que passam por todo cômodo', 'As pegadas batem com o formato dos sapatos do John, além de que os sapatos dele estão sujos de lama', 0),
@@ -69,7 +56,7 @@ INSERT INTO items (Id_itens, Id_Cenas, combined_item_id, Nome, Descricao, Result
 (16, 1, NULL, 'Vizinho_James_Fubacake', 'Sendo o vizinho, talvez ele deve ter percebido algo importante', 'Bem que notei a presença de mais alguém vindo junto do John, se houve tiros, não consegui ouvir nada', 0),
 (17, 3, NULL, 'Amelia_Hotwhells', 'É a esposa de Backflip, sendo a mais próxima dele, tem chances consideráveis de ser quem matou, mas com as pistas que temos, acho difícil ser ela', 'Eu não mataria meu próprio marido, ele era um homem perfeito, eu não tenho motivos para matá-lo', 0);
 
-
+/*AREA DE TESTE*/
 
 SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = 1;
 
@@ -80,20 +67,15 @@ update usuarios
 set cena_id = 2
 where Id_player = 1;
 
-
 show tables from sqltextadventure;
 select * from cenas;	 
 select * from items;
 select * from usuarios; 
 select * from inventory;
 
-
 drop database sqltextadventure
 create database sqltextadventure
 use sqltextadventure
-
-SELECT i.Id_itens, i.Nome, i.Descricao FROM inventory inv JOIN items i ON inv.Id_item = i.Id_itens WHERE inv.Id_player = 1;
-
 
 drop table cenas;
 drop table items;

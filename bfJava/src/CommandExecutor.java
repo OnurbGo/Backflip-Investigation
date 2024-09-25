@@ -29,7 +29,7 @@ public class CommandExecutor {
                 case "USE":
                     System.out.println("Usando item: " + arguments);
 
-                    // Divide o comando para checar "use [item] with [alvo]" (se necessário)
+                    // Divide o comando para checar "use [item1] with [item2]"
                     String[] parts = arguments.split(" with ");
                     String itemUsado = parts[0].trim();
                     inventory = player.getInventory();
@@ -46,12 +46,12 @@ public class CommandExecutor {
                     }
 
                     if (hasItem) {
-                        // Caso 1: Cena 3 - Usar "ACUSAR" sem alvo
+                        // Cena 3 - Usar "ACUSAR"
                         if (itemToRemove.getNome().equalsIgnoreCase("ACUSAR") && player.getCurrentSceneId() == 3) {
                             System.out.println("Parabéns, você capturou o criminoso!");
                             // Aqui você pode adicionar lógica adicional, como finalizar o jogo ou passar para outra fase.
 
-                            // Caso 2: Cena 1 - Usar "MUNICAO_DESCONHECIDO"
+                            // Cena 1 - Usar "MUNICAO_DESCONHECIDO"
                         } else if (itemToRemove.getNome().equalsIgnoreCase("MUNICAO_DESCONHECIDO") && player.getCurrentSceneId() == 1) {
                             // Remove "MUNICAO_DESCONHECIDO" e adiciona "MUNICAO_9MM"
                             player.removeItemFromInventory(itemToRemove);
@@ -75,7 +75,7 @@ public class CommandExecutor {
                                 System.out.println("Cena 2 não encontrada.");
                             }
 
-                            // Caso 3: Cena 2 - Usar "MUNICAO_9MM"
+                            // Cena 2 - Usar "MUNICAO_9MM"
                         } else if (itemToRemove.getNome().equalsIgnoreCase("MUNICAO_9MM") && player.getCurrentSceneId() == 2) {
                             // Remove "MUNICAO_9MM" e adiciona "ACUSAR"
                             player.removeItemFromInventory(itemToRemove);
@@ -100,8 +100,9 @@ public class CommandExecutor {
                             }
 
                         } else {
-                            // Se o item não for encontrado ou a ação não puder ser realizada
-                            System.out.println("Esse item não pode ser usado nesta cena.");
+                            // Se o item não fizer parte dos itens principais, remover do inventário
+                            System.out.println("Esse item não faz parte dos principais, será removido.");
+                            player.removeItemFromInventory(itemToRemove);
                         }
                     } else {
                         System.out.println("Item " + itemUsado + " não encontrado no inventário.");
@@ -114,7 +115,7 @@ public class CommandExecutor {
                     if (item != null) {
                         // Verifica se o item pertence à cena atual do jogador
                         int currentSceneId = player.getCurrentSceneId();
-                        if (item.getId_cena() == currentSceneId) { // Supondo que o item tenha um método getSceneId()
+                        if (item.getId_cena() == currentSceneId) {
 
                             if (item.isCarregavel()) {
                                 inventory = player.getInventory();
